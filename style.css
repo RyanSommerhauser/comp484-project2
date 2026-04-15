@@ -49,25 +49,55 @@
     height:250px;
   }
   
-  .dashboard div {
-    display:block;
-  }
-  
   .pet-image-container {
     float:left;
     padding:10px;
   }
   
-  .dashboard {
-    float:left;
-    padding:20px;
+/* Main dashboard box */
+.dashboard-box {
+  background: #f4f6f8;
+  border: 2px solid #ccc;
+  border-radius: 12px;
+  padding: 20px;
+  width: 320px;
+  float: left;
+  margin-left: 20px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+  /* Add pet section */
+  .add-pet-container {
+    margin-bottom: 15px;
   }
-  
+
+  .pet-name-input {
+    width: 65%;
+    padding: 5px;
+    margin-right: 5px;
+  }
+
+  .add-pet-button {
+    padding: 6px 10px;
+    cursor: pointer;
+  }
+
+  /* Stats spacing */
+  .pet-stats div {
+    margin-bottom: 5px;
+  }
+
+  /* Buttons layout */
   .button-container {
-    margin-top:20px;
+    margin-top: 15px;
+  }
+
+  .button-container button {
+    width: 70px;
+    margin: 5px 5px 0 0;
   }
   
-  .button-container button {
+  /* .button-container button {
     width: 100px;
       margin-right: 10px;
       text-align: center;
@@ -79,7 +109,7 @@
     cursor:pointer;
     background-image: linear-gradient(to bottom,rgba(246,246,246,.1)0%,rgba(30,40,53,0)66%);
     color: #fafafa;
-  }
+  } */
 
   .pet-message-overlay {
   position: fixed;

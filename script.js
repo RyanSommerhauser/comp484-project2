@@ -4,6 +4,7 @@ $(function() { // Makes sure that your function is called once all the DOM eleme
     checkAndUpdatePetInfoInHtml();
   
     // When each button is clicked, it will "call" function for that button (functions are below)
+    $('.add-pet-button').click(createPet);
     $('.treat-button').click(clickedTreatButton);
     $('.play-button').click(clickedPlayButton);
     $('.exercise-button').click(clickedExerciseButton);
@@ -14,14 +15,10 @@ $(function() { // Makes sure that your function is called once all the DOM eleme
   })
   
     // Add a variable "pet_info" equal to a object with the name (string), weight (number), and happiness (number) of your pet
-    var pet_info = {
-      name: "Fluffy",
-      weight: 10,
-      happiness: 50,
-      hunger: 50
-    };
+    var pet_info = null;
   
     function clickedFeedButton() {
+      if (!pet_info) return;
       pet_info.hunger += 25;
       pet_info.weight += 2;
 
@@ -35,6 +32,7 @@ $(function() { // Makes sure that your function is called once all the DOM eleme
     }
     
     function clickedTreatButton() {
+      if (!pet_info) return;
       pet_info.happiness += 10;
       pet_info.weight += 2;
 
@@ -48,6 +46,7 @@ $(function() { // Makes sure that your function is called once all the DOM eleme
     }
 
     function clickedPlayButton() {
+      if (!pet_info) return;
       pet_info.happiness += 10;
       pet_info.weight -= 1;
       pet_info.hunger -= 5;
@@ -62,6 +61,7 @@ $(function() { // Makes sure that your function is called once all the DOM eleme
     }
 
     function clickedExerciseButton() {
+      if (!pet_info) return;
       pet_info.happiness -= 5;
       pet_info.weight -= 3;
       pet_info.hunger -= 5;
@@ -76,7 +76,8 @@ $(function() { // Makes sure that your function is called once all the DOM eleme
     }
   
     function checkAndUpdatePetInfoInHtml() {
-      checkBoundsBeforeUpdating();  
+      if (!pet_info) return;
+      checkBoundsBeforeUpdating();
       updatePetInfoInHtml();
     }
 
@@ -114,6 +115,23 @@ $(function() { // Makes sure that your function is called once all the DOM eleme
       $('.weight').text(pet_info['weight']);
       $('.happiness').text(pet_info['happiness']);
       $('.hunger').text(pet_info.hunger);
+    }
+
+    function createPet() {
+      var name = $('.pet-name-input').val();
+
+      if (name.trim() === "") {
+        return; // don't allow empty names
+      }
+
+      pet_info = {
+        name: name,
+        weight: 10,
+        happiness: 50,
+        hunger: 50
+      };
+
+      checkAndUpdatePetInfoInHtml();
     }
 
     function showMessage(mainText, subText, duration) {
