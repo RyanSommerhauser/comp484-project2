@@ -50,18 +50,24 @@
     background: #fafafa;
   }
   
-  .pet-image {
-    height:250px;
-  }
-  
-  .pet-image-container {
-    float:left;
-    padding:10px;
-  }
+
   .pet-container {
     display: flex;
     gap: 15px;
     flex-wrap: wrap;
+  }
+
+  .pet-image-area {
+    text-align: center;
+    margin-bottom: 10px;
+  }
+
+  .pet-image {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid #ccc;
   }
 
   .dashboard-box {

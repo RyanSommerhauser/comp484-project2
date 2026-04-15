@@ -20,6 +20,9 @@ $(function() { // Makes sure that your function is called once all the DOM eleme
 function createPetBox(name) {
 var box = $(`
   <div class="dashboard-box">
+    <div class="pet-image-area">
+      <img class="pet-image" src="images/pet-image.jpg">
+    </div>
 
     <div class="pet-message-area">
       <p class="pet-message-text"></p>
