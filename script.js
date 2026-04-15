@@ -21,28 +21,57 @@ $(function() { // Makes sure that your function is called once all the DOM eleme
       hunger: 50
     };
   
-    function clickedTreatButton() {
-      pet_info.happiness += 10;
+    function clickedFeedButton() {
+      pet_info.hunger += 25;
       pet_info.weight += 2;
+
+      showMessage(
+        "Thanks for the food!",
+        pet_info.name + " is eating...",
+        2000
+      );
+
       checkAndUpdatePetInfoInHtml();
     }
     
+    function clickedTreatButton() {
+      pet_info.happiness += 10;
+      pet_info.weight += 2;
+
+      showMessage(
+        "Yum! That was tasty!",
+        pet_info.name + " enjoyed the treat!",
+        2000
+      );
+
+      checkAndUpdatePetInfoInHtml();
+    }
+
     function clickedPlayButton() {
       pet_info.happiness += 10;
       pet_info.weight -= 1;
       pet_info.hunger -= 5;
+
+      showMessage(
+        "That was fun!",
+        pet_info.name + " is playing!",
+        2000
+      );
+
       checkAndUpdatePetInfoInHtml();
     }
-    
+
     function clickedExerciseButton() {
       pet_info.happiness -= 5;
       pet_info.weight -= 3;
       pet_info.hunger -= 5;
-      checkAndUpdatePetInfoInHtml();
-    }
-    function clickedFeedButton() {
-      pet_info.hunger += 25;
-      pet_info.weight += 2;
+
+      showMessage(
+        "I'm tired...",
+        pet_info.name + " is exercising.",
+        2000
+      );
+
       checkAndUpdatePetInfoInHtml();
     }
   
@@ -86,4 +115,24 @@ $(function() { // Makes sure that your function is called once all the DOM eleme
       $('.happiness').text(pet_info['happiness']);
       $('.hunger').text(pet_info.hunger);
     }
-  
+
+    function showMessage(mainText, subText, duration) {
+    // Set text
+    $('.pet-message-text').text(mainText);
+    $('.pet-message-subtext').text(subText);
+
+    // Show overlay
+    $('.pet-message-overlay').fadeIn();
+
+    // Disable buttons
+    $('.button-container button').prop('disabled', true);
+
+    // Hide after duration
+    setTimeout(function() {
+      $('.pet-message-overlay').fadeOut();
+
+      // Re-enable buttons
+      $('.button-container button').prop('disabled', false);
+    }, duration);
+  }
+    
