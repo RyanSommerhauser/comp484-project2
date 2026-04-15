@@ -1,156 +1,168 @@
 $(function() { // Makes sure that your function is called once all the DOM elements of the page are ready to be used.
-    
-    // Called function to update the name, happiness, and weight of our pet in our HTML
-    checkAndUpdatePetInfoInHtml();
-  
-    // When each button is clicked, it will "call" function for that button (functions are below)
     $('.add-pet-button').click(createPet);
-    $('.treat-button').click(clickedTreatButton);
-    $('.play-button').click(clickedPlayButton);
-    $('.exercise-button').click(clickedExerciseButton);
-    $('.feed-button').click(clickedFeedButton);
-
-  
-    
   })
   
-    // Add a variable "pet_info" equal to a object with the name (string), weight (number), and happiness (number) of your pet
-    var pet_info = null;
-  
-    function clickedFeedButton() {
-      if (!pet_info) return;
-      pet_info.hunger += 25;
-      pet_info.weight += 2;
+function createPetBox(name) {
+var box = $(`
+  <div class="dashboard-box">
 
-      showMessage(
-        "Thanks for the food!",
-        pet_info.name + " is eating...",
-        2000
-      );
+    <div class="pet-message-area">
+      <p class="pet-message-text"></p>
+      <p class="pet-message-subtext"></p>
+    </div>
 
-      checkAndUpdatePetInfoInHtml();
-    }
-    
-    function clickedTreatButton() {
-      if (!pet_info) return;
-      pet_info.happiness += 10;
-      pet_info.weight += 2;
+    <div class="pet-stats">
+      <div>Name: <strong class="name"></strong></div>
+      <div>Weight: <strong class="weight"></strong></div>
+      <div>Happiness: <strong class="happiness"></strong></div>
+      <div>Hunger: <strong class="hunger"></strong></div>
+    </div>
 
-      showMessage(
-        "Yum! That was tasty!",
-        pet_info.name + " enjoyed the treat!",
-        2000
-      );
+    <div class="button-container">
+      <button class="treat-button">Treat</button>
+      <button class="play-button">Play</button>
+      <button class="exercise-button">Exercise</button>
+      <button class="feed-button">Feed</button>
+    </div>
 
-      checkAndUpdatePetInfoInHtml();
-    }
+  </div>
+`);
 
-    function clickedPlayButton() {
-      if (!pet_info) return;
-      pet_info.happiness += 10;
-      pet_info.weight -= 1;
-      pet_info.hunger -= 5;
+  // create pet object inside box
+  box.data("pet", {
+    name: name,
+    weight: 10,
+    happiness: 50,
+    hunger: 50
+  });
 
-      showMessage(
-        "That was fun!",
-        pet_info.name + " is playing!",
-        2000
-      );
+  updateBoxUI(box);
 
-      checkAndUpdatePetInfoInHtml();
-    }
+  // attach events
+  attachPetEvents(box);
 
-    function clickedExerciseButton() {
-      if (!pet_info) return;
-      pet_info.happiness -= 5;
-      pet_info.weight -= 3;
-      pet_info.hunger -= 5;
+  return box;
+}
 
-      showMessage(
-        "I'm tired...",
-        pet_info.name + " is exercising.",
-        2000
-      );
+function createPet() {
+  var name = $('.pet-name-input').val();
 
-      checkAndUpdatePetInfoInHtml();
-    }
-  
-    function checkAndUpdatePetInfoInHtml() {
-      if (!pet_info) return;
-      checkBoundsBeforeUpdating();
-      updatePetInfoInHtml();
-    }
+  if (name.trim() === "") return;
 
-    setInterval(function() {
-      pet_info.hunger -= 1;
-      checkAndUpdatePetInfoInHtml();
-    }, 1000); // every 3 seconds
+  var box = createPetBox(name);
 
-    setInterval(function() {
-      pet_info.happiness -= 1;
-      checkAndUpdatePetInfoInHtml();
-    }, 3000); // every 3 seconds
-    
-    function checkBoundsBeforeUpdating() {
-      if (pet_info.weight < 0) {
-        pet_info.weight = 0;
-      }
-      if (pet_info.happiness < 0) {
-        pet_info.happiness = 0;
-      }
-      if (pet_info.happiness > 100) {
-        pet_info.happiness = 100;
-      }
-      if (pet_info.hunger < 0) {
-        pet_info.hunger = 0;
-      }
-      if (pet_info.hunger > 100) {
-        pet_info.hunger = 100;
-      }
-    }
-    
-    // Updates your HTML with the current values in your pet_info object
-    function updatePetInfoInHtml() {
-      $('.name').text(pet_info['name']);
-      $('.weight').text(pet_info['weight']);
-      $('.happiness').text(pet_info['happiness']);
-      $('.hunger').text(pet_info.hunger);
-    }
+  $('.pet-container').append(box);
 
-    function createPet() {
-      var name = $('.pet-name-input').val();
+  $('.pet-name-input').val("");
+};
 
-      if (name.trim() === "") {
-        return; // don't allow empty names
-      }
+function attachPetEvents(box) {
 
-      pet_info = {
-        name: name,
-        weight: 10,
-        happiness: 50,
-        hunger: 50
-      };
+  box.find('.treat-button').click(function() {
+    var pet = box.data("pet");
 
-      checkAndUpdatePetInfoInHtml();
-    }
+    pet.happiness += 10;
+    pet.weight += 2;
 
-    function showMessage(mainText, subText, duration) {
-    // Set text
-    $('.pet-message-text').text(mainText);
-    $('.pet-message-subtext').text(subText);
+    showMessage(box, "Yum!", pet.name + " loved the treat!", 2000);
+    updateBoxUI(box);
+  });
 
-    // Show overlay
-    $('.pet-message-overlay').fadeIn();
+  box.find('.play-button').click(function() {
+    var pet = box.data("pet");
 
-    // Disable buttons
-    $('.button-container button').prop('disabled', true);
+    pet.happiness += 10;
+    pet.weight -= 1;
+    pet.hunger -= 5;
 
-    // Hide after duration
-    setTimeout(function() {
-      $('.pet-message-overlay').fadeOut();
+    showMessage(box, "Fun!", pet.name + " is playing!", 2000);
+    updateBoxUI(box);
+  });
 
-      // Re-enable buttons
-      $('.button-container button').prop('disabled', false);
-    }, duration);
+  box.find('.exercise-button').click(function() {
+    var pet = box.data("pet");
+
+    pet.happiness -= 5;
+    pet.weight -= 3;
+    pet.hunger -= 5;
+
+    showMessage(box, "Phew...", pet.name + " is tired!", 2000);
+    updateBoxUI(box);
+  });
+
+  box.find('.feed-button').click(function() {
+    var pet = box.data("pet");
+
+    pet.hunger += 25;
+    pet.weight += 2;
+
+    showMessage(box, "Thanks!", pet.name + " is eating!", 2000);
+    updateBoxUI(box);
+  });
+}
+
+
+setInterval(function() {
+
+  $('.dashboard-box').each(function() {
+    var box = $(this);
+    var pet = box.data("pet");
+
+    if (!pet) return;
+
+    pet.hunger -= 2;
+    pet.happiness -= 1;
+
+    updateBoxUI(box);
+  });
+
+}, 3000);
+
+// unused right now
+function checkBoundsBeforeUpdating() {
+  if (pet_info.weight < 0) {
+    pet_info.weight = 0;
   }
-    
+  if (pet_info.happiness < 0) {
+    pet_info.happiness = 0;
+  }
+  if (pet_info.happiness > 100) {
+    pet_info.happiness = 100;
+  }
+  if (pet_info.hunger < 0) {
+    pet_info.hunger = 0;
+  }
+  if (pet_info.hunger > 100) {
+    pet_info.hunger = 100;
+  }
+}
+
+// Updates HTML with the current values in pet_info object
+function updateBoxUI(box) {
+  var pet = box.data("pet");
+
+  box.find('.name').text(pet.name);
+  box.find('.weight').text(pet.weight);
+  box.find('.happiness').text(pet.happiness);
+  box.find('.hunger').text(pet.hunger);
+}
+
+
+function showMessage(box, mainText, subText, duration) {
+  // Set text inside this box only
+  box.find('.pet-message-text').text(mainText);
+  box.find('.pet-message-subtext').text(subText);
+
+  // Show message
+  box.find('.pet-message-area').fadeIn();
+
+  // Disable only this box's buttons
+  box.find('.button-container button').prop('disabled', true);
+
+  setTimeout(function() {
+    box.find('.pet-message-area').fadeOut();
+
+    // Re-enable only this box's buttons
+    box.find('.button-container button').prop('disabled', false);
+  }, duration);
+}
