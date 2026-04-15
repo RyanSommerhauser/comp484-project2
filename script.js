@@ -33,7 +33,8 @@ var box = $(`
     name: name,
     weight: 10,
     happiness: 50,
-    hunger: 50
+    hunger: 50,
+    dead: false
   });
 
   updateBoxUI(box);
@@ -56,38 +57,62 @@ function createPet() {
   $('.pet-name-input').val("");
 };
 
+function killPet(box, reason) {
+  var pet = box.data("pet");
+
+  if (pet.dead) return; // prevent double-trigger
+
+  pet.dead = true;
+
+  box.find('.pet-message-area').show();
+  box.find('.pet-message-text').text("💀 " + pet.name + " has died");
+  box.find('.pet-message-subtext').text(reason);
+
+  // disable all buttons permanently
+  box.find('.button-container button').prop('disabled', true);
+}
+
 function attachPetEvents(box) {
 
   box.find('.treat-button').click(function() {
     var pet = box.data("pet");
 
     pet.happiness += 10;
-    pet.weight += 2;
+    pet.weight += 3;
+    pet.hunger += 5;
 
-    showMessage(box, "Yum!", pet.name + " loved the treat!", 2000);
+    checkPetStatus(box);
     updateBoxUI(box);
+    if (pet.dead) return;
+    showMessage(box, "Yum!", pet.name + " loved the treat!", 2000);
   });
+
+
 
   box.find('.play-button').click(function() {
     var pet = box.data("pet");
 
-    pet.happiness += 10;
+    pet.happiness += 15;
     pet.weight -= 1;
     pet.hunger -= 5;
 
-    showMessage(box, "Fun!", pet.name + " is playing!", 2000);
+    checkPetStatus(box);
     updateBoxUI(box);
+    if (pet.dead) return;
+    showMessage(box, "Fun!", pet.name + " is playing!", 2000);
   });
 
   box.find('.exercise-button').click(function() {
     var pet = box.data("pet");
 
-    pet.happiness -= 5;
+    pet.happiness -= 10;
     pet.weight -= 3;
-    pet.hunger -= 5;
+    pet.hunger -= 10;
 
-    showMessage(box, "Phew...", pet.name + " is tired!", 2000);
+    checkPetStatus(box);
     updateBoxUI(box);
+    if (pet.dead) return;
+    showMessage(box, "Phew...", pet.name + " is tired!", 2000);
   });
 
   box.find('.feed-button').click(function() {
@@ -96,8 +121,10 @@ function attachPetEvents(box) {
     pet.hunger += 25;
     pet.weight += 2;
 
-    showMessage(box, "Thanks!", pet.name + " is eating!", 2000);
+    checkPetStatus(box);
     updateBoxUI(box);
+    if (pet.dead) return;
+    showMessage(box, "Thanks!", pet.name + " is eating!", 2000);
   });
 }
 
@@ -108,32 +135,45 @@ setInterval(function() {
     var box = $(this);
     var pet = box.data("pet");
 
-    if (!pet) return;
+    if (!pet || pet.dead) return;
 
     pet.hunger -= 2;
-    pet.happiness -= 1;
+    pet.happiness -= 2;
 
+    checkPetStatus(box);
     updateBoxUI(box);
   });
 
 }, 3000);
 
-// unused right now
-function checkBoundsBeforeUpdating() {
-  if (pet_info.weight < 0) {
-    pet_info.weight = 0;
+function checkPetStatus(box) {
+  var pet = box.data("pet");
+
+  if (!pet || pet.dead) return;
+
+  // clamp values
+  if (pet.hunger > 100) pet.hunger = 100;
+  if (pet.happiness > 100) pet.happiness = 100;
+
+  // death conditions
+  if (pet.hunger <= 0) {
+    killPet(box, "Starved...");
+    return;
   }
-  if (pet_info.happiness < 0) {
-    pet_info.happiness = 0;
+
+  if (pet.happiness <= 0) {
+    killPet(box, "Died of sadness...");
+    return;
   }
-  if (pet_info.happiness > 100) {
-    pet_info.happiness = 100;
+
+  if (pet.weight >= 20) {
+    killPet(box, "Got too heavy...");
+    return;
   }
-  if (pet_info.hunger < 0) {
-    pet_info.hunger = 0;
-  }
-  if (pet_info.hunger > 100) {
-    pet_info.hunger = 100;
+  
+  if (pet.weight <= 0) {
+    killPet(box, "Got too light...");
+    return;
   }
 }
 
