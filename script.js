@@ -1,3 +1,18 @@
+/*
+JQuery Method 1: .find()
+Used to search inside a specific pet box element.
+This allows each pet to independently update its own stats and buttons
+without affecting other pets on the page.
+Example: box.find('.name').text(pet.name);
+*/
+
+/*
+JQuery Method 2: .stop()
+Used to stop any ongoing animations before starting a new one.
+This prevents animation stacking issues when showing and hiding pet messages.
+Example: box.find('.pet-message-area').stop(true, true).fadeIn();
+*/
+
 $(function() { // Makes sure that your function is called once all the DOM elements of the page are ready to be used.
     $('.add-pet-button').click(createPet);
   })
@@ -194,13 +209,13 @@ function showMessage(box, mainText, subText, duration) {
   box.find('.pet-message-subtext').text(subText);
 
   // Show message
-  box.find('.pet-message-area').fadeIn();
+  box.find('.pet-message-area').stop(true, true).fadeIn();
 
   // Disable only this box's buttons
   box.find('.button-container button').prop('disabled', true);
 
   setTimeout(function() {
-    box.find('.pet-message-area').fadeOut();
+    box.find('.pet-message-area').stop(true, true).fadeOut();
 
     // Re-enable only this box's buttons
     box.find('.button-container button').prop('disabled', false);
