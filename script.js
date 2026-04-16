@@ -162,7 +162,7 @@ setInterval(function() {
     updateBoxUI(box);
   });
 
-}, 1000);
+}, 2000);
 
 function checkPetStatus(box) {
   var pet = box.data("pet");
