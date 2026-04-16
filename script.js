@@ -18,33 +18,33 @@ $(function() { // Makes sure that your function is called once all the DOM eleme
   })
   
 function createPetBox(name) {
-var box = $(`
-  <div class="dashboard-box">
-    <div class="pet-image-area">
-      <img class="pet-image" src="images/pet-image.jpg">
-    </div>
+  var box = $(`
+    <div class="dashboard-box">
+      <div class="pet-image-area">
+        <img class="pet-image" src="images/pet-image.jpg">
+      </div>
 
-    <div class="pet-message-area">
-      <p class="pet-message-text"></p>
-      <p class="pet-message-subtext"></p>
-    </div>
+      <div class="pet-message-area">
+        <p class="pet-message-text"></p>
+        <p class="pet-message-subtext"></p>
+      </div>
 
-    <div class="pet-stats">
-      <div>Name: <strong class="name"></strong></div>
-      <div>Weight: <strong class="weight"></strong></div>
-      <div>Happiness: <strong class="happiness"></strong></div>
-      <div>Hunger: <strong class="hunger"></strong></div>
-    </div>
+      <div class="pet-stats">
+        <div>Name: <strong class="name"></strong></div>
+        <div>Weight: <strong class="weight"></strong></div>
+        <div>Happiness: <strong class="happiness"></strong></div>
+        <div>Hunger: <strong class="hunger"></strong></div>
+      </div>
 
-    <div class="button-container">
-      <button class="treat-button">Treat</button>
-      <button class="play-button">Play</button>
-      <button class="exercise-button">Exercise</button>
-      <button class="feed-button">Feed</button>
-    </div>
+      <div class="button-container">
+        <button class="treat-button">Treat</button>
+        <button class="play-button">Play</button>
+        <button class="exercise-button">Exercise</button>
+        <button class="feed-button">Feed</button>
+      </div>
 
-  </div>
-`);
+    </div>
+  `);
 
   // create pet object inside box
   box.data("pet", {
@@ -162,7 +162,7 @@ setInterval(function() {
     updateBoxUI(box);
   });
 
-}, 3000);
+}, 1000);
 
 function checkPetStatus(box) {
   var pet = box.data("pet");
